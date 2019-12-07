@@ -59,16 +59,12 @@ node {
 def deployMetadata(toolbelt, clientId, username, encryptedpass, jwtkeyfile, instanceurl, orgName, checkOnly) {
 
 	// Login into the sandbox
-	if(isUnix()){
-		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${clientId} --username ${username} --jwtkeyfile ${jwtkeyfile} --instanceurl ${instanceurl} --loglevel debug"
-	} else {
-		rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${clientId} --username ${username} --jwtkeyfile ${jwtkeyfile} --instanceurl ${instanceurl} --loglevel debug"
-	}
+	rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${clientId} --username ${username} --jwtkeyfile ${jwtkeyfile} --instanceurl ${instanceurl} --loglevel debug"
 
 	if (rc != 0) {
 		error 'Failed to login into the org'
 	}
-
+    /*
 	// Deploy the converted code
 	def checkOnlyArg = checkOnly? '--checkonly' : ''
 
@@ -87,4 +83,5 @@ def deployMetadata(toolbelt, clientId, username, encryptedpass, jwtkeyfile, inst
 		orgDetails = bat returnStdout: true, returnStatus: false, script: "sfdx force:org:display --targetusername ${username} --json"
 		orgDetails = orgDetails.split('\n')[2].trim()
 	}
+    */
 }
