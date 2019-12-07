@@ -20,9 +20,9 @@ node {
    def toolbelt = tool 'toolbelt'
    
    stage('Push To TP6') {
-        rc = bat returnStatus: true, script: "sfdx force"
         withCredentials([file(credentialsId: TP6_JWT_KEY_CRED_ID, variable: 'orgSpecificJwtCredId')]) {
            rc = bat returnStatus: true, script: "echo ${orgSpecificJwtCredId}"
+           rc = bat returnStatus: true, script: "sfdx force"
        }
    }
 }
