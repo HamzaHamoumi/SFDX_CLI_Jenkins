@@ -24,16 +24,8 @@ node {
            rc = bat returnStatus: true, script: "echo ${orgSpecificJwtCredId}"
            rc = bat returnStatus: true, script: "sfdx force"
        
-            deployMetadata(
-                        toolbelt,
-                        TP6_CONNECTED_APP_CONSUMER_KEY,
-                        TP6_USERNAME,
-                        TP6_ENCRYPTEDPASSWORD,
-                        orgSpecificJwtCredId,
-                        TP6_HOST,
-                        TP6_ORGNAME,
-                        false
-						)
+            echo "authenticating"
+            rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} --username ${TP6_USERNAME} --jwtkeyfile ${orgSpecificJwtCredId} --instanceurl ${TP6_HOST} --loglevel debug"
        }
    }
 }
