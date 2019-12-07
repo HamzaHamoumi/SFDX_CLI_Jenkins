@@ -23,6 +23,68 @@ node {
         withCredentials([file(credentialsId: TP6_JWT_KEY_CRED_ID, variable: 'orgSpecificJwtCredId')]) {
            rc = bat returnStatus: true, script: "echo ${orgSpecificJwtCredId}"
            rc = bat returnStatus: true, script: "sfdx force"
+       
+            deployMetadata(
+                        toolbelt,
+                        TP6_CONNECTED_APP_CONSUMER_KEY,
+                        TP6_USERNAME,
+                        TP6_ENCRYPTEDPASSWORD,
+                        orgSpecificJwtCredId,
+                        TP6_HOST,
+                        TP6_ORGNAME,
+                        false
+						)
        }
    }
+}
+
+
+
+/***********************************************************************************************************************
+ * Stage specific methods
+ **********************************************************************************************************************/
+
+/**
+ * Deploys traditional metadata files to a conventional sandbox.
+ *
+ * @param toolbelt 			Path to where the SFDX tooling is installed.
+ * @param clientId 			The Connected App client ID which will be used for logging into that sandbox.
+ * @param username			The Username of the User jenkins is using to build to target environment.
+ * @param encryptedpass		The Password of the User jenkins is using to load via Data Loader Command Line.
+ * @param jwtkeyfile 		The path to the certificate which will be used to sign the JWT token when logging into the sandbox.
+ * @param instanceurl  		The host name to use to log into Salesforce (e.g. https://login.salesforce.com)
+ * @param orgName  			Name of the sandbox or Production environment
+ * @param checkOnly     	Set to true if the deployment should be check only deployment
+ */
+def deployMetadata(toolbelt, clientId, username, encryptedpass, jwtkeyfile, instanceurl, orgName, checkOnly) {
+
+	// Login into the sandbox
+	if(isUnix()){
+		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${clientId} --username ${username} --jwtkeyfile ${jwtkeyfile} --instanceurl ${instanceurl} --loglevel debug"
+	} else {
+		rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${clientId} --username ${username} --jwtkeyfile ${jwtkeyfile} --instanceurl ${instanceurl} --loglevel debug"
+	}
+
+	if (rc != 0) {
+		error 'Failed to login into the org'
+	}
+
+	// Deploy the converted code
+	def checkOnlyArg = checkOnly? '--checkonly' : ''
+
+	if(isUnix()){
+		rmsg = sh returnStdout: true, returnStatus: false, script: "${toolbelt}/sfdx force:mdapi:deploy --targetusername ${username} --deploydir force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
+	} else {
+		rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${username} --deploydir force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
+		rmsg = rmsg.split('\n')[2].trim()
+	}
+
+	def orgDetails;
+
+	if(isUnix()){
+		orgDetails = sh returnStdout: true, returnStatus: false, script: "${toolbelt}/sfdx force:org:display --targetusername ${username} --json"
+	} else {
+		orgDetails = bat returnStdout: true, returnStatus: false, script: "sfdx force:org:display --targetusername ${username} --json"
+		orgDetails = orgDetails.split('\n')[2].trim()
+	}
 }
