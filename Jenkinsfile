@@ -46,6 +46,9 @@ node {
 
 			rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${TP6_USERNAME} --deploydir .\\force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
 			rmsg = rmsg.split('\n')[2].trim()
+
+			// logout from all authorized orgs
+			rc = bat returnStatus: true, script: "sfdx force:auth:logout -a"
 		}
    }
 }
