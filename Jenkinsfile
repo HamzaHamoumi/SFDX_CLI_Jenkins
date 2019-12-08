@@ -42,8 +42,8 @@ node {
 			def checkOnly = false
 			def checkOnlyArg = checkOnly? '--checkonly' : ''
 
-			//rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${TP6_USERNAME} --deploydir .\\force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
-			//rmsg = rmsg.split('\n')[2].trim()
+			rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${TP6_USERNAME} --deploydir .\\force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
+			rmsg = rmsg.split('\n')[2].trim()
 		}
    }
 }
