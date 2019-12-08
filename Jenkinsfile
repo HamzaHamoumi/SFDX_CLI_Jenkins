@@ -36,8 +36,8 @@ node {
        
             echo "authenticating"
         	rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} --username ${TP6_USERNAME} --jwtkeyfile ${orgSpecificJwtCredId} --instanceurl ${TP6_HOST} --loglevel debug"
-			sfdx force:alias:list
-			sfdx force:org:list
+			rc = bat returnStatus: true, script: "sfdx force:alias:list"
+			rc = bat returnStatus: true, script: "sfdx force:org:list"
 
 			echo "deploying"
 			// Deploy the converted code
