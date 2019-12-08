@@ -18,6 +18,16 @@ def TP6_ORGNAME = 'TP6'
 node {
    def mvnHome
    def toolbelt = tool 'toolbelt'
+
+   // Clone the repository
+	stage('Clone') {
+		// Retrieve source
+		checkout scm
+
+		// Determine the SCRM url so we can push tags later on
+		SCM_URL = bat(returnStdout: true, script: 'git config remote.origin.url').trim()
+		echo "${SCM_URL}"
+	}
    
    stage('Push To TP6') {
 		withCredentials([file(credentialsId: TP6_JWT_KEY_CRED_ID, variable: 'orgSpecificJwtCredId')]) {
