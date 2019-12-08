@@ -35,7 +35,7 @@ node {
            	rc = bat returnStatus: true, script: "sfdx force"
        
             echo "authenticating"
-        	rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} --username ${TP6_USERNAME} --jwtkeyfile ${orgSpecificJwtCredId} --instanceurl ${TP6_HOST} --loglevel debug"
+        	rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} --username ${TP6_USERNAME} --jwtkeyfile \"${orgSpecificJwtCredId}\" --instanceurl ${TP6_HOST} --loglevel debug"
 			rc = bat returnStatus: true, script: "sfdx force:alias:list"
 			rc = bat returnStatus: true, script: "sfdx force:org:list"
 
@@ -44,7 +44,7 @@ node {
 			def checkOnly = false
 			def checkOnlyArg = checkOnly? '--checkonly' : ''
 
-			rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${TP6_USERNAME} --deploydir .\\force-app\\main\\default --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
+			rmsg = bat returnStdout: true, returnStatus: false, script: "sfdx force:mdapi:deploy --targetusername ${TP6_USERNAME} --deploydir ".\\force-app\\main\\default" --testlevel RunLocalTests --json ${checkOnlyArg} --ignorewarnings"
 			rmsg = rmsg.split('\n')[2].trim()
 		}
    }
