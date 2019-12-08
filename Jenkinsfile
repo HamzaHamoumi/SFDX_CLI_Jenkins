@@ -31,7 +31,7 @@ node {
    
    stage('Push To TP6') {
 	   	// logout from all authorized orgs
-		rc = bat returnStatus: true, script: "sfdx force:auth:logout -a"
+		rc = bat returnStatus: true, script: "sfdx force:auth:logout -a -p"
 
 		withCredentials([file(credentialsId: TP6_JWT_KEY_CRED_ID, variable: 'orgSpecificJwtCredId')]) {
            	rc = bat returnStatus: true, script: "echo ${orgSpecificJwtCredId}"
