@@ -39,7 +39,7 @@ node {
        
             echo "authenticating"
         	//rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} --username ${TP6_USERNAME} --jwtkeyfile \"${orgSpecificJwtCredId}\" --instanceurl ${TP6_HOST} --loglevel debug"
-			rc = bat returnStatus: true, script: "sfdx force:auth:web:login --clientid 04580y4051234051 -r https://curious-panda-90d3bp-dev-ed.lightning.force.com/"
+			rc = bat returnStatus: true, script: "sfdx force:auth:web:login --clientid ${TP6_CONNECTED_APP_CONSUMER_KEY} -r ${TP6_HOST}"
 			rc = bat returnStatus: true, script: "sfdx force:alias:list"
 			rc = bat returnStatus: true, script: "sfdx force:org:list"
 
